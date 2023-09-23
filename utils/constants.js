@@ -1,6 +1,6 @@
-const INCORRECT_URL = 'Некорректный URL';
-const SERVER_ERROR = 'На сервере произошла ошибка';
-const UNAUTHORIZED = 'Неправильные почта или пароль';
+const INCORRECT_URL = 'Некорректный URL'; // +
+const SERVER_ERROR = 'На сервере произошла ошибка'; // +
+const UNAUTHORIZED = 'Неправильные почта или пароль'; // +
 const BAD_REQUEST = 'Переданы некорректные данные';
 const NOT_FOUND = 'Страница не найдена';
 const FORBIDDEN = 'Недостаточно прав';
