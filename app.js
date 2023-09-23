@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cookieParser = require('cookie-parser');
 const { errors } = require('celebrate');
 const helmet = require('helmet');
 const cors = require('cors');
@@ -14,6 +15,7 @@ app.use(requestLogger);
 app.use(rateLimit);
 app.use(helmet());
 app.use(cors());
+app.use(cookieParser());
 app.use(express.json());
 
 mongoose.connect(DATABASE_URL, MONGO_OPTIONS);
