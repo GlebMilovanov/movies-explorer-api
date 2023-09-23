@@ -1,12 +1,12 @@
 const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
+const { HTTP_STATUS_OK, HTTP_STATUS_CREATED } = require('../utils/constants');
 const User = require('../models/user');
 const { ConflictError } = require('../utils/errors/conflictError');
 const { ValidationError } = require('../utils/errors/validationError');
 const { JWT_SECRET } = require('../utils/config');
 const {
-  HTTP_STATUS_CREATED,
   MONGO_DUPLICATE_ERROR_CODE,
   SALT_ROUNDS,
   BAD_REQUEST,
@@ -50,7 +50,7 @@ const login = async (req, res, next) => {
         httpOnly: true,
         sameSite: true,
       })
-      .send({ message: AUTH_DONE });
+      .status(HTTP_STATUS_OK).send({ message: AUTH_DONE });
   } catch (err) {
     return next(err);
   }
@@ -64,8 +64,7 @@ const logout = async (req, res, next) => {
         maxAge: 0,
         httpOnly: true,
         sameSite: true,
-      })
-      .send({ message: LOGOUT });
+      }).status(HTTP_STATUS_OK).send({ message: LOGOUT });
   } catch (err) {
     return next(err);
   }
@@ -75,7 +74,7 @@ const logout = async (req, res, next) => {
 const getUserInfo = async (req, res, next) => {
   try {
     const user = await User.findById(req.user._id);
-    return res.send({ data: user });
+    return res.status(HTTP_STATUS_OK).send({ data: user });
   } catch (err) {
     return next(err);
   }
@@ -92,7 +91,7 @@ const updateUserBio = async (req, res, next) => {
       { new: true, runValidators: true },
     );
 
-    return res.send({ data: user });
+    return res.status(HTTP_STATUS_OK).send({ data: user });
   } catch (err) {
     if (err instanceof mongoose.Error.ValidationError) {
       return next(new ValidationError(BAD_REQUEST));
