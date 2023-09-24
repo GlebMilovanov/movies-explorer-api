@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
-const { INCORRECT_URL } = require('../utils/constants');
 
 const movieSchema = new mongoose.Schema(
   {
@@ -31,7 +30,7 @@ const movieSchema = new mongoose.Schema(
       required: [true, 'Поле "Ссылка на постер" должно быть заполнено'],
       validate: {
         validator: (v) => validator.isURL(v),
-        message: INCORRECT_URL,
+        message: 'Указана некорректная ссылка на постер',
       },
     },
     trailerLink: {
@@ -39,7 +38,7 @@ const movieSchema = new mongoose.Schema(
       required: [true, 'Поле "Ссылка на трейлер" должно быть заполнено'],
       validate: {
         validator: (v) => validator.isURL(v),
-        message: INCORRECT_URL,
+        message: 'Указана некорректная ссылка на трейлер',
       },
     },
     thumbnail: {
@@ -47,7 +46,7 @@ const movieSchema = new mongoose.Schema(
       required: [true, 'Поле "Ссылка на постер" должно быть заполнено'],
       validate: {
         validator: (v) => validator.isURL(v),
-        message: INCORRECT_URL,
+        message: 'Указана некорректная ссылка на постер',
       },
     },
     owner: {
@@ -61,11 +60,17 @@ const movieSchema = new mongoose.Schema(
     },
     nameRU: {
       type: String,
-      required: [true, 'Поле "Название фильма на русском" должно быть заполнено'],
+      required: [
+        true,
+        'Поле "Название фильма на русском" должно быть заполнено',
+      ],
     },
     nameEN: {
       type: String,
-      required: [true, 'Поле "Название фильма на английском" должно быть заполнено'],
+      required: [
+        true,
+        'Поле "Название фильма на английском" должно быть заполнено',
+      ],
     },
   },
   { versionKey: false },

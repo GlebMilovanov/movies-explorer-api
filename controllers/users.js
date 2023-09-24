@@ -1,18 +1,14 @@
 const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
-const { HTTP_STATUS_OK, HTTP_STATUS_CREATED } = require('../utils/constants');
+const { HTTP_STATUS_OK, HTTP_STATUS_CREATED } = require('http2').constants;
 const User = require('../models/user');
-const { ConflictError } = require('../utils/errors/conflictError');
-const { ValidationError } = require('../utils/errors/validationError');
+const ConflictError = require('../utils/errors/conflictError');
+const ValidationError = require('../utils/errors/validationError');
 const { JWT_SECRET } = require('../utils/config');
 const {
   MONGO_DUPLICATE_ERROR_CODE,
   SALT_ROUNDS,
-  BAD_REQUEST,
-  CONFLICT,
-  AUTH_DONE,
-  LOGOUT,
 } = require('../utils/constants');
 
 // create new user
@@ -24,10 +20,16 @@ const createUser = async (req, res, next) => {
     return res.status(HTTP_STATUS_CREATED).send({ data: userWithoutPassword });
   } catch (err) {
     if (err instanceof mongoose.Error.ValidationError) {
-      return next(new ValidationError(BAD_REQUEST));
+      return next(
+        new ValidationError(
+          'Переданы некорректные данные при создании пользователя',
+        ),
+      );
     }
     if (err.code === MONGO_DUPLICATE_ERROR_CODE) {
-      return next(new ConflictError(CONFLICT));
+      return next(
+        new ConflictError('Пользователь с таким email уже существует'),
+      );
     }
     return next(err);
   }
@@ -37,7 +39,6 @@ const createUser = async (req, res, next) => {
 const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-
     const user = await User.findUserByCredentials(email, password);
 
     const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
@@ -50,7 +51,8 @@ const login = async (req, res, next) => {
         httpOnly: true,
         sameSite: true,
       })
-      .status(HTTP_STATUS_OK).send({ message: AUTH_DONE });
+      .status(HTTP_STATUS_OK)
+      .send({ message: 'Авторизация прошла успешно' });
   } catch (err) {
     return next(err);
   }
@@ -64,7 +66,9 @@ const logout = async (req, res, next) => {
         maxAge: 0,
         httpOnly: true,
         sameSite: true,
-      }).status(HTTP_STATUS_OK).send({ message: LOGOUT });
+      })
+      .status(HTTP_STATUS_OK)
+      .send({ message: 'Выход из аккаунта прошел успешно' });
   } catch (err) {
     return next(err);
   }
@@ -94,10 +98,16 @@ const updateUserBio = async (req, res, next) => {
     return res.status(HTTP_STATUS_OK).send({ data: user });
   } catch (err) {
     if (err instanceof mongoose.Error.ValidationError) {
-      return next(new ValidationError(BAD_REQUEST));
+      return next(
+        new ValidationError(
+          'Переданы некорректные данные при обновлении профиля',
+        ),
+      );
     }
     if (err.code === MONGO_DUPLICATE_ERROR_CODE) {
-      return next(new ConflictError(CONFLICT));
+      return next(
+        new ConflictError('Пользователь с таким email уже существует'),
+      );
     }
     return next(err);
   }
