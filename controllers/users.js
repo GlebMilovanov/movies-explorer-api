@@ -5,11 +5,11 @@ const { HTTP_STATUS_OK, HTTP_STATUS_CREATED } = require('http2').constants;
 const User = require('../models/user');
 const ConflictError = require('../utils/errors/conflictError');
 const ValidationError = require('../utils/errors/validationError');
-const { JWT_SECRET } = require('../utils/config');
 const {
+  JWT_SECRET,
   MONGO_DUPLICATE_ERROR_CODE,
   SALT_ROUNDS,
-} = require('../utils/constants');
+} = require('../utils/config');
 
 // create new user
 const createUser = async (req, res, next) => {

@@ -1,5 +1,5 @@
 const { celebrate, Joi } = require('celebrate');
-const { urlPattern } = require('../constants');
+const { urlPattern } = require('../config');
 
 const validateCreateMovie = celebrate({
   body: Joi.object().keys({
