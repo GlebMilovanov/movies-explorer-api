@@ -4,6 +4,7 @@ const Movie = require('../models/movie');
 const ValidationError = require('../utils/errors/validationError');
 const NotFoundError = require('../utils/errors/notFoundError');
 const ForbiddenError = require('../utils/errors/forbiddenError');
+const { VALIDATION, NOTFOUND, FORBIDDEN } = require('../utils/constants');
 
 // get favourite movies
 const getMovies = async (req, res, next) => {
@@ -22,9 +23,7 @@ const createMovie = async (req, res, next) => {
     return res.status(HTTP_STATUS_CREATED).send({ data: movie });
   } catch (err) {
     if (err instanceof mongoose.Error.ValidationError) {
-      return next(
-        new ValidationError('Переданы некорректные данные при создании фильма'),
-      );
+      return next(new ValidationError(VALIDATION));
     }
     return next(err);
   }
@@ -34,10 +33,10 @@ const createMovie = async (req, res, next) => {
 const deleteMovie = async (req, res, next) => {
   try {
     const movie = await Movie.findById(req.params.movieId).orFail(
-      new NotFoundError('Фильм не найден'),
+      new NotFoundError(NOTFOUND),
     );
     if (movie.owner.toString() !== req.user._id) {
-      return next(new ForbiddenError('Нельзя удалять чужие фильмы'));
+      return next(new ForbiddenError(FORBIDDEN));
     }
     await movie.deleteOne();
     return res.status(HTTP_STATUS_OK).send({ data: movie });

@@ -11,7 +11,12 @@ const rateLimit = require('./middlewares/rateLimit');
 const { errorHandler } = require('./middlewares/errorHandler');
 
 const app = express();
-app.use(cors());
+app.use(
+  cors({
+    origin: 'https://movies-explorer.gleb.nomoredomainsrocks.ru',
+    credentials: true,
+  }),
+);
 app.use(express.json());
 app.use(helmet());
 app.use(cookieParser());

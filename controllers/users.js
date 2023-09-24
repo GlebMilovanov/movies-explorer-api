@@ -7,9 +7,15 @@ const ConflictError = require('../utils/errors/conflictError');
 const ValidationError = require('../utils/errors/validationError');
 const {
   JWT_SECRET,
-  MONGO_DUPLICATE_ERROR_CODE,
   SALT_ROUNDS,
 } = require('../utils/config');
+const {
+  VALIDATION,
+  CONFLICT,
+  SIGN_IN_OK,
+  SIGN_OUT_OK,
+  MONGO_DUPLICATE_ERROR_CODE,
+} = require('../utils/constants');
 
 // create new user
 const createUser = async (req, res, next) => {
@@ -20,16 +26,10 @@ const createUser = async (req, res, next) => {
     return res.status(HTTP_STATUS_CREATED).send({ data: userWithoutPassword });
   } catch (err) {
     if (err instanceof mongoose.Error.ValidationError) {
-      return next(
-        new ValidationError(
-          'Переданы некорректные данные при создании пользователя',
-        ),
-      );
+      return next(new ValidationError(VALIDATION));
     }
     if (err.code === MONGO_DUPLICATE_ERROR_CODE) {
-      return next(
-        new ConflictError('Пользователь с таким email уже существует'),
-      );
+      return next(new ConflictError(CONFLICT));
     }
     return next(err);
   }
@@ -52,7 +52,7 @@ const login = async (req, res, next) => {
         sameSite: true,
       })
       .status(HTTP_STATUS_OK)
-      .send({ message: 'Авторизация прошла успешно' });
+      .send({ message: SIGN_IN_OK });
   } catch (err) {
     return next(err);
   }
@@ -68,7 +68,7 @@ const logout = async (req, res, next) => {
         sameSite: true,
       })
       .status(HTTP_STATUS_OK)
-      .send({ message: 'Выход из аккаунта прошел успешно' });
+      .send({ message: SIGN_OUT_OK });
   } catch (err) {
     return next(err);
   }
@@ -78,7 +78,8 @@ const logout = async (req, res, next) => {
 const getUserInfo = async (req, res, next) => {
   try {
     const user = await User.findById(req.user._id);
-    return res.status(HTTP_STATUS_OK).send({ data: user });
+    const { email, name } = user;
+    return res.status(HTTP_STATUS_OK).send({ data: { email, name } });
   } catch (err) {
     return next(err);
   }
@@ -98,16 +99,10 @@ const updateUserBio = async (req, res, next) => {
     return res.status(HTTP_STATUS_OK).send({ data: user });
   } catch (err) {
     if (err instanceof mongoose.Error.ValidationError) {
-      return next(
-        new ValidationError(
-          'Переданы некорректные данные при обновлении профиля',
-        ),
-      );
+      return next(new ValidationError(VALIDATION));
     }
     if (err.code === MONGO_DUPLICATE_ERROR_CODE) {
-      return next(
-        new ConflictError('Пользователь с таким email уже существует'),
-      );
+      return next(new ConflictError(CONFLICT));
     }
     return next(err);
   }

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const { INVALID_URL } = require('../utils/constants');
 
 const movieSchema = new mongoose.Schema(
   {
@@ -30,7 +31,7 @@ const movieSchema = new mongoose.Schema(
       required: [true, 'Поле "Ссылка на постер" должно быть заполнено'],
       validate: {
         validator: (v) => validator.isURL(v),
-        message: 'Указана некорректная ссылка на постер',
+        message: INVALID_URL,
       },
     },
     trailerLink: {
@@ -38,7 +39,7 @@ const movieSchema = new mongoose.Schema(
       required: [true, 'Поле "Ссылка на трейлер" должно быть заполнено'],
       validate: {
         validator: (v) => validator.isURL(v),
-        message: 'Указана некорректная ссылка на трейлер',
+        message: INVALID_URL,
       },
     },
     thumbnail: {
@@ -46,7 +47,7 @@ const movieSchema = new mongoose.Schema(
       required: [true, 'Поле "Ссылка на постер" должно быть заполнено'],
       validate: {
         validator: (v) => validator.isURL(v),
-        message: 'Указана некорректная ссылка на постер',
+        message: INVALID_URL,
       },
     },
     owner: {
