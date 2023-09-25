@@ -14,7 +14,7 @@ Movies Explorer is a comprehensive platform for discovering and managing a colle
 
 1. **Clone the repository**
     ```sh
-    git clone https://github.com/GlebMilovanov/movies-explorer.git
+    git clone git@github.com:GlebMilovanov/movies-explorer-api.git
     ```
 
 2. **Navigate to the project directory**
@@ -43,5 +43,5 @@ Access the live API at [https://api.movies-explorer.gleb.nomoredomainsrocks.ru/]
 
 ## 🔗 Links
 
-- [Project Repository](https://github.com/GlebMilovanov/movies-explorer)
+- [Project Repository](https://github.com/GlebMilovanov/movies-explorer-api)
 
